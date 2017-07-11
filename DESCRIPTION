@@ -1,0 +1,30 @@
+Package: openwindfarm
+Type: Package
+Title: API Client for ENGIE's Open Wind Farm
+Version: 0.1.0
+Date: 2017-07-10
+Authors@R: person("Paul", "Poncet", , "paulponcet@yahoo.fr", role = c("aut", "cre"))
+Description: Provides an API client to retrieve data from 'La Haute Borne', 
+    a wind farm of the ENGIE Group whose ten minutes time series have been  
+    published under the Open License 2.0 of Etalab. 
+    The main function to be used is get_owf(). 
+License: MIT + file LICENSE
+LazyData: TRUE
+Depends: 
+    R (>= 3.1.3)
+Imports:
+    anytime (>= 0.3.0),
+    dplyr,
+    foreach,
+    httr, 
+    leaflet,
+    magrittr,
+    readr
+Suggests:
+    knitr, 
+    ggplot2
+VignetteBuilder: 
+    knitr
+URL: https://github.com/paulponcet/openwindfarm
+BugReports: https://github.com/paulponcet/openwindfarm/issues
+RoxygenNote: 6.0.1

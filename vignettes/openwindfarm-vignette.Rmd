@@ -1,0 +1,66 @@
+---
+title: "API Client for ENGIE's Open Wind Farm"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{API Client for ENGIE's Open Wind Farm}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE,
+                      comment = "#>")
+```
+
+The wind farm called `La Haute Borne' (ENGIE Group) is located in the Meuse department in France,
+and is made of four Senvion MM82 wind turbines commissioned in January, 15th, 2009.
+
+```{r, out.width="100%"}
+library(openwindfarm)
+map_owf()
+```
+
+The main function of the package 'openwindfarm' is `get_owf()`. 
+It retrives Scada data from this wind farm, distributed by [the ENGIE Group](http://www.engie.com) under the terms of the  [Open Licence 2.0](https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf), provided by [Etalab](https://www.etalab.gouv.fr/en/qui-sommes-nous) and designed to be compatible notably with the "Creative Commons Attribution 4.0" (CC-BY 4.0) license of Creative Commons.
+
+The first argument of `get_owf()` is the name of the wind turbine to be considered, among 
+the four wind turbines of the wind farm named `"R80711"` (or `1`),
+`"R80790"` (or `2`), `"R80721"` (or `3`), and `"R80736"` (or `4`).  
+
+```{r}
+df <- get_owf(wind_turbine = "R80711", 
+              start_date = "2012-12-10 00:10:00", 
+              end_date = "2013-01-15 03:30:00")
+```
+
+In addition to the columns `Wind_turbine_name` and `Date_time`,
+the dataset is made of 136 columns, which record every 10 minutes the average, the minimum,
+the maximum, and the standard deviation over 10 minutes of 34 measurements
+related to the operational behavior of the 4 wind turbines. 
+Among these measurements one may find e.g. the rotor speed `Rs`: 
+
+```{r}
+library(dplyr)
+df %>% 
+  select("Wind_turbine_name", "Date_time", starts_with("Rs")) %>% 
+  head()
+```
+
+The dataset describing these 34 measurements can be retrieved with the
+`get_info` function.
+
+The following chart depicts the usual relation between the active power produced by a wind turbine and the cube of the wind speed measured by the nacelle anemometer: 
+
+```{r, fig.width=6, fig.height=3}
+library(ggplot2)
+ggplot(df, aes(I(Ws_avg^3), P_avg)) + 
+  geom_point() + 
+  geom_smooth(colour = "red") + 
+  ggtitle("Wind turbine R80711") + 
+  theme_bw()
+```
+
+
